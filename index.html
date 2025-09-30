@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZIP Archive Uploader</title>
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #8A2BE2 0%, #9370DB 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,582 +22,386 @@
             padding: 20px;
         }
         
-        .container {
-            background: #6A0DAD;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        .chat-container {
             width: 100%;
-            max-width: 600px;
-            padding: 40px;
-            text-align: center;
+            max-width: 1000px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
         }
         
-        h1 {
+        .chat-header {
+            background: linear-gradient(to right, #4776E6, #8E54E9);
             color: white;
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            font-weight: 700;
+            padding: 20px;
+            text-align: center;
+            position: relative;
         }
         
-        .subtitle {
-            color: #E6E6FA;
+        .chat-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .chat-header p {
+            opacity: 0.9;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: #f5f7fb;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 18px;
+            margin-bottom: 15px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .received {
+            align-self: flex-start;
+            background: white;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .sent {
+            align-self: flex-end;
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.75rem;
+        }
+        
+        .received .message-info {
+            color: #777;
+        }
+        
+        .sent .message-info {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .message-time {
+            opacity: 0.7;
+        }
+        
+        .chat-footer {
+            padding: 15px 20px;
+            background: white;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
             font-size: 1rem;
-            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
         }
         
-        .stats {
+        .message-input:focus {
+            border-color: #4776E6;
+        }
+        
+        .send-button {
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 25px;
-            background: #7B1FA2;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #9C27B0;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .stat-item {
-            text-align: center;
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(71, 118, 230, 0.4);
         }
         
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #E1BEE7;
+        .send-button i {
+            font-size: 1.2rem;
         }
         
-        .stat-label {
-            font-size: 0.85rem;
-            color: #CE93D8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .upload-area {
-            border: 3px dashed #CE93D8;
-            border-radius: 16px;
-            padding: 40px 20px;
-            margin-bottom: 25px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: #7B1FA2;
-        }
-        
-        .upload-area:hover {
-            border-color: #E1BEE7;
-            background: #8E24AA;
-        }
-        
-        .upload-area.drag-over {
-            border-color: #E1BEE7;
-            background: #9C27B0;
-        }
-        
-        .upload-icon {
-            font-size: 3.5rem;
-            color: #E1BEE7;
-            margin-bottom: 15px;
-        }
-        
-        .upload-text {
-            color: #E6E6FA;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .upload-subtext {
-            color: #D1C4E9;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-        
-        .file-info {
-            margin-top: 15px;
-            padding: 12px;
-            background: #7B1FA2;
-            border-radius: 8px;
-            display: none;
-            border: 1px solid #9C27B0;
-        }
-        
-        .file-name {
-            color: white;
-            font-weight: 600;
-            word-break: break-all;
-        }
-        
-        .file-size {
-            color: #E6E6FA;
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
-        
-        .upload-button {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            border: 2px solid #BBDEFB;
-        }
-        
-        .upload-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(33, 150, 243, 0.4);
-            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
-        }
-        
-        .upload-button:disabled {
-            background: #90CAF9;
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .status {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 12px;
-            background: #7B1FA2;
-            border: 2px solid #9C27B0;
-            display: none;
-        }
-        
-        .status.show {
-            display: block;
-        }
-        
-        .status-title {
-            color: #E6E6FA;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .status-text {
-            color: #D1C4E9;
-            font-size: 0.95rem;
-        }
-        
-        .success {
-            color: #A5D6A7;
-            font-weight: 600;
-            border-color: #81C784;
-            background: #5D4037;
-        }
-        
-        .error {
-            color: #EF9A9A;
-            font-weight: 600;
-            border-color: #F44336;
-            background: #4A148C;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #9C27B0;
-            border-radius: 3px;
-            margin-top: 15px;
-            overflow: hidden;
-            display: none;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #E1BEE7, #CE93D8);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .download-section {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 12px;
-            background: #7B1FA2;
-            border: 2px solid #9C27B0;
-            display: none;
-        }
-        
-        .download-section.show {
-            display: block;
-        }
-        
-        .download-title {
-            color: #E6E6FA;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-        
-        .download-link-container {
-            position: relative;
-            margin-bottom: 15px;
-        }
-        
-        .download-link {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #CE93D8;
-            border-radius: 8px;
-            background: #8E24AA;
-            color: white;
-            font-size: 0.95rem;
-            text-align: center;
-            word-break: break-all;
-            cursor: pointer;
-        }
-        
-        .copy-button {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid #BBDEFB;
-        }
-        
-        .copy-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
-        }
-        
-        .copy-button.copied {
-            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
-            border-color: #A5D6A7;
-        }
-        
-        .supported-formats {
-            background: #7B1FA2;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 25px;
-            text-align: left;
-            border: 2px solid #9C27B0;
-        }
-        
-        .supported-formats h3 {
-            color: #E6E6FA;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        
-        .formats-list {
-            color: #D1C4E9;
-            font-size: 0.85rem;
+        .user-input {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
-        .format-tag {
-            background: #8E24AA;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+        .username-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .join-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 30px;
+            cursor: pointer;
             font-weight: 600;
-            border: 1px solid #9C27B0;
+            transition: background 0.3s;
         }
         
-        @media (max-width: 600px) {
-            .container {
-                padding: 25px;
+        .join-button:hover {
+            background: #218838;
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            float: left;
+            margin: 0 2px;
+            background-color: #9E9EA1;
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+        
+        .typing-indicator span:nth-of-type(1) {
+            animation: typing 1s infinite;
+        }
+        
+        .typing-indicator span:nth-of-type(2) {
+            animation: typing 1s infinite 0.2s;
+        }
+        
+        .typing-indicator span:nth-of-type(3) {
+            animation: typing 1s infinite 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 95vh;
             }
             
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .stats {
-                gap: 15px;
-                flex-direction: column;
-            }
-            
-            .stat-number {
-                font-size: 1.5rem;
-            }
-            
-            .upload-area {
-                padding: 30px 15px;
-            }
-            
-            .download-link {
-                font-size: 0.85rem;
+            .message {
+                max-width: 85%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📁 ZIP Archive Uploader</h1>
-        <p class="subtitle">Upload your compressed files securely</p>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number" id="uploadedCount">0</div>
-                <div class="stat-label">Files Uploaded</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="downloadedCount">0</div>
-                <div class="stat-label">Files Downloaded</div>
-            </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1><i class="fas fa-comments"></i> Global Chat Room</h1>
+            <p>Connect with people around the world in real-time</p>
         </div>
         
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📦</div>
-            <div class="upload-text">Drag & Drop your ZIP file here</div>
-            <div class="upload-subtext">or click to browse files</div>
-            <input type="file" id="fileInput" accept=".zip,.rar,.7z,.tar,.gz,.bz2" style="display: none;">
+        <div class="chat-body" id="chatBody">
+            <div class="message received">
+                <div class="message-text">Welcome to the chat room! Type your message below to start chatting.</div>
+                <div class="message-info">
+                    <span class="sender">System</span>
+                    <span class="message-time">10:00 AM</span>
+                </div>
+            </div>
             
-            <div class="file-info" id="fileInfo">
-                <div class="file-name" id="fileName"></div>
-                <div class="file-size" id="fileSize"></div>
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
         
-        <button class="upload-button" id="uploadButton" disabled>Upload ZIP Archive</button>
-        
-        <div class="progress-bar" id="progressBar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-        
-        <div class="status" id="status">
-            <div class="status-title" id="statusTitle">Status</div>
-            <div class="status-text" id="statusText"></div>
-        </div>
-        
-        <div class="download-section" id="downloadSection">
-            <div class="download-title">🔗 Your Download Link</div>
-            <div class="download-link-container">
-                <div class="download-link" id="downloadLink" onclick="copyToClipboard()">Click to copy download link</div>
+        <div class="chat-footer">
+            <div class="user-input" id="userInputSection">
+                <input type="text" class="username-input" id="usernameInput" placeholder="Enter your name">
+                <button class="join-button" id="joinButton">Join Chat</button>
             </div>
-            <button class="copy-button" id="copyButton" onclick="copyToClipboard()">Copy Link</button>
-            <button class="copy-button" style="background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); margin-top: 10px; border-color: #A5D6A7;" onclick="simulateDownload()">
-                Download Now
-            </button>
-        </div>
-        
-        <div class="supported-formats">
-            <h3>SupportedContent Formats:</h3>
-            <div class="formats-list">
-                <span class="format-tag">.zip</span>
-                <span class="format-tag">.rar</span>
-                <span class="format-tag">.7z</span>
-                <span class="format-tag">.tar</span>
-                <span class="format-tag">.gz</span>
-                <span class="format-tag">.bz2</span>
+            
+            <div class="message-input-section" id="messageInputSection" style="display: none;">
+                <input type="text" class="message-input" id="messageInput" placeholder="Type your message here..." disabled>
+                <button class="send-button" id="sendButton" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize counters
-        let uploadedFilesCount = 0;
-        let downloadedFilesCount = 0;
+        // DOM Elements
+        const chatBody = document.getElementById('chatBody');
+        const usernameInput = document.getElementById('usernameInput');
+        const joinButton = document.getElementById('joinButton');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const userInputSection = document.getElementById('userInputSection');
+        const messageInputSection = document.getElementById('messageInputSection');
+        const typingIndicator = document.getElementById('typingIndicator');
         
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const uploadButton = document.getElementById('uploadButton');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileName = document.getElementById('fileName');
-        const fileSize = document.getElementById('fileSize');
-        const status = document.getElementById('status');
-        const statusTitle = document.getElementById('statusTitle');
-        const statusText = document.getElementById('statusText');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
-        const downloadSection = document.getElementById('downloadSection');
-        const downloadLink = document.getElementById('downloadLink');
-        const copyButton = document.getElementById('copyButton');
-        const uploadedCount = document.getElementById('uploadedCount');
-        const downloadedCount = document.getElementById('downloadedCount');
+        // State variables
+        let currentUser = null;
+        let messages = [];
         
-        let selectedFile = null;
-        
-        // Update counters display
-        function updateCounters() {
-            uploadedCount.textContent = uploadedFilesCount;
-            downloadedCount.textContent = downloadedFilesCount;
+        // Initialize with sample messages
+        function initializeChat() {
+            addMessage("Welcome to our chat room! This is a demo of real-time messaging.", "System", false);
+            addMessage("Feel free to send messages and see how they appear instantly!", "System", false);
         }
         
-        // Handle click on upload area
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        // Handle file selection
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileSelection(e.target.files[0]);
-            }
-        });
-        
-        // Handle drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('drag-over');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
+        // Add a new message to the chat
+        function addMessage(text, sender, isSent = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isSent ? 'sent' : 'received');
             
-            if (e.dataTransfer.files.length > 0) {
-                handleFileSelection(e.dataTransfer.files[0]);
-            }
-        });
-        
-        function handleFileSelection(file) {
-            // Check if file is a supported archive format
-            const supportedExtensions = ['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2'];
-            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            const time = new Date();
+            const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
-            if (!supportedExtensions.includes(fileExtension)) {
-                showStatus('error', 'Invalid file type', 'Please upload a supported archive format (.zip, .rar, .7z, .tar, .gz, .bz2)');
-                return;
-            }
+            messageDiv.innerHTML = `
+                <div class="message-text">${text}</div>
+                <div class="message-info">
+                    <span class="sender">${sender}</span>
+                    <span class="message-time">${timeString}</span>
+                </div>
+            `;
             
-            // Check file size (limit to 100MB for demo)
-            const maxSize = 100 * 1024 * 1024; // 100MB
-            if (file.size > maxSize) {
-                showStatus('error', 'File too large', 'Maximum file size is 100MB');
-                return;
-            }
+            chatBody.insertBefore(messageDiv, typingIndicator);
+            chatBody.scrollTop = chatBody.scrollHeight;
             
-            selectedFile = file;
-            displayFileInfo(file);
-            uploadButton.disabled = false;
-            hideStatus();
-            downloadSection.classList.remove('show');
+            // Store message
+            messages.push({
+                text,
+                sender,
+                time: timeString,
+                isSent
+            });
         }
         
-        function displayFileInfo(file) {
-            fileName.textContent = file.name;
-            const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-            fileSize.textContent = `${sizeInMB} MB`;
-            fileInfo.style.display = 'block';
+        // Show typing indicator
+        function showTyping() {
+            typingIndicator.style.display = 'block';
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
         
-        function hideStatus() {
-            status.classList.remove('show');
-            status.classList.remove('success', 'error');
+        // Hide typing indicator
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
         }
         
-        function showStatus(type, title, text) {
-            statusTitle.textContent = title;
-            statusText.textContent = text;
-            status.classList.add('show');
-            status.classList.add(type);
-        }
-        
-        // Handle upload button click
-        uploadButton.addEventListener('click', () => {
-            if (!selectedFile) return;
+        // Simulate receiving a message after a delay
+        function simulateReceivedMessage() {
+            const responses = [
+                "That's interesting!",
+                "Thanks for sharing!",
+                "I agree with you.",
+                "How are you doing today?",
+                "Have you tried the new feature?",
+                "Looking forward to your next message!",
+                "Great point!",
+                "I hadn't thought of it that way.",
+                "What do you think about this topic?",
+                "Nice to meet you here!"
+            ];
             
-            // Show progress bar
-            progressBar.style.display = 'block';
-            progressFill.style.width = '0%';
-            
-            // Simulate upload progress
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 15;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    completeUpload();
-                }
-                progressFill.style.width = progress + '%';
-            }, 200);
-        });
-        
-        function completeUpload() {
-            setTimeout(() => {
-                // Generate a mock download link
-                const mockDownloadLink = `http://www.trashcorefiles.zone.id/download/${generateRandomString(16)}/${selectedFile.name}`;
-                downloadLink.textContent = mockDownloadLink;
-                downloadLink.setAttribute('data-link', mockDownloadLink);
-                
-                // Increment uploaded files counter
-                uploadedFilesCount++;
-                updateCounters();
-                
-                // Show download section
-                downloadSection.classList.add('show');
-                
-                // Reset upload button
-                uploadButton.disabled = true;
-                
-                // Hide progress bar
-                progressBar.style.display = 'none';
-                
-                showStatus('success', 'Upload Complete', `Your archive "${selectedFile.name}" has been uploaded successfully!`);
-            }, 500);
-        }
-        
-        function generateRandomString(length) {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        }
-        
-        function copyToClipboard() {
-            const link = downloadLink.getAttribute('data-link');
-            if (!link) return;
-            
-            // Create temporary textarea to copy text
-            const textarea = document.createElement('textarea');
-            textarea.value = link;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            
-            // Show feedback
-            copyButton.textContent = 'Copied!';
-            copyButton.classList.add('copied');
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            const senders = ["Alex", "Taylor", "Jordan", "Casey", "Morgan", "Riley"];
+            const randomSender = senders[Math.floor(Math.random() * senders.length)];
             
             setTimeout(() => {
-                copyButton.textContent = 'Copy Link';
-                copyButton.classList.remove('copied');
-            }, 2000);
+                addMessage(randomResponse, randomSender, false);
+                hideTyping();
+            }, 2000 + Math.random() * 3000);
         }
         
-        function simulateDownload() {
-            // Increment downloaded files counter
-            downloadedFilesCount++;
-            updateCounters();
-            
-            // Show success message
-            showStatus('success', 'Download Started', 'Your file download has been initiated!');
-            
-            // Simulate download completion
-            setTimeout(() => {
-                showStatus('success', 'Download Complete', 'Your file has been downloaded successfully!');
-            }, 1500);
+        // Handle joining the chat
+        joinButton.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (username) {
+                currentUser = username;
+                userInputSection.style.display = 'none';
+                messageInputSection.style.display = 'flex';
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+                
+                addMessage(`Hello ${username}! You've joined the chat.`, "System", false);
+            } else {
+                usernameInput.placeholder = "Please enter your name!";
+                usernameInput.style.borderColor = "#dc3545";
+                setTimeout(() => {
+                    usernameInput.style.borderColor = "#e0e0e0";
+                    usernameInput.placeholder = "Enter your name";
+                }, 2000);
+            }
+        });
+        
+        // Handle sending a message
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message && currentUser) {
+                addMessage(message, currentUser, true);
+                messageInput.value = '';
+                
+                // Show typing indicator and simulate response
+                showTyping();
+                simulateReceivedMessage();
+            }
         }
         
-        // Initialize counters on page load
-        updateCounters();
+        // Initialize the chat
+        initializeChat();
     </script>
 </body>
 </html>
-```
