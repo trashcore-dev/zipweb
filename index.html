@@ -13,7 +13,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            background: linear-gradient(135deg, #8A2BE2 0%, #9370DB 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,9 +22,9 @@
         }
         
         .container {
-            background: white;
+            background: #6A0DAD;
             border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 600px;
             padding: 40px;
@@ -32,14 +32,14 @@
         }
         
         h1 {
-            color: #2d3748;
+            color: white;
             font-size: 2.2rem;
             margin-bottom: 10px;
             font-weight: 700;
         }
         
         .subtitle {
-            color: #718096;
+            color: #E6E6FA;
             font-size: 1rem;
             margin-bottom: 20px;
         }
@@ -49,10 +49,10 @@
             justify-content: center;
             gap: 30px;
             margin-bottom: 25px;
-            background: #f8fafc;
+            background: #7B1FA2;
             padding: 15px;
             border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #9C27B0;
         }
         
         .stat-item {
@@ -62,51 +62,51 @@
         .stat-number {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #4361ee;
+            color: #E1BEE7;
         }
         
         .stat-label {
             font-size: 0.85rem;
-            color: #718096;
+            color: #CE93D8;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
         .upload-area {
-            border: 3px dashed #cbd5e0;
+            border: 3px dashed #CE93D8;
             border-radius: 16px;
             padding: 40px 20px;
             margin-bottom: 25px;
             transition: all 0.3s ease;
             cursor: pointer;
-            background: #f8fafc;
+            background: #7B1FA2;
         }
         
         .upload-area:hover {
-            border-color: #4361ee;
-            background: #edf2ff;
+            border-color: #E1BEE7;
+            background: #8E24AA;
         }
         
         .upload-area.drag-over {
-            border-color: #4361ee;
-            background: #dbeafe;
+            border-color: #E1BEE7;
+            background: #9C27B0;
         }
         
         .upload-icon {
             font-size: 3.5rem;
-            color: #4361ee;
+            color: #E1BEE7;
             margin-bottom: 15px;
         }
         
         .upload-text {
-            color: #4a5568;
+            color: #E6E6FA;
             font-size: 1.1rem;
             margin-bottom: 10px;
             font-weight: 600;
         }
         
         .upload-subtext {
-            color: #718096;
+            color: #D1C4E9;
             font-size: 0.9rem;
             margin-bottom: 15px;
         }
@@ -114,25 +114,26 @@
         .file-info {
             margin-top: 15px;
             padding: 12px;
-            background: #e2e8f0;
+            background: #7B1FA2;
             border-radius: 8px;
             display: none;
+            border: 1px solid #9C27B0;
         }
         
         .file-name {
-            color: #2d3748;
+            color: white;
             font-weight: 600;
             word-break: break-all;
         }
         
         .file-size {
-            color: #718096;
+            color: #E6E6FA;
             font-size: 0.85rem;
             margin-top: 5px;
         }
         
         .upload-button {
-            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -142,15 +143,18 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
+            border: 2px solid #BBDEFB;
         }
         
         .upload-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 10px 20px -5px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
         }
         
         .upload-button:disabled {
-            background: #cbd5e0;
+            background: #90CAF9;
+            opacity: 0.6;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
@@ -160,8 +164,8 @@
             margin-top: 25px;
             padding: 20px;
             border-radius: 12px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
+            background: #7B1FA2;
+            border: 2px solid #9C27B0;
             display: none;
         }
         
@@ -170,34 +174,34 @@
         }
         
         .status-title {
-            color: #4a5568;
+            color: #E6E6FA;
             font-weight: 600;
             margin-bottom: 10px;
         }
         
         .status-text {
-            color: #718096;
+            color: #D1C4E9;
             font-size: 0.95rem;
         }
         
         .success {
-            color: #38a169;
+            color: #A5D6A7;
             font-weight: 600;
-            border-color: #c6f6d5;
-            background: #f0fdf4;
+            border-color: #81C784;
+            background: #5D4037;
         }
         
         .error {
-            color: #e53e3e;
+            color: #EF9A9A;
             font-weight: 600;
-            border-color: #fed7d7;
-            background: #fef2f2;
+            border-color: #F44336;
+            background: #4A148C;
         }
         
         .progress-bar {
             width: 100%;
             height: 6px;
-            background: #e2e8f0;
+            background: #9C27B0;
             border-radius: 3px;
             margin-top: 15px;
             overflow: hidden;
@@ -206,7 +210,7 @@
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4361ee, #3a0ca3);
+            background: linear-gradient(90deg, #E1BEE7, #CE93D8);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -215,8 +219,8 @@
             margin-top: 25px;
             padding: 20px;
             border-radius: 12px;
-            background: #f0f9ff;
-            border: 2px solid #bae6fd;
+            background: #7B1FA2;
+            border: 2px solid #9C27B0;
             display: none;
         }
         
@@ -225,7 +229,7 @@
         }
         
         .download-title {
-            color: #0c4a6e;
+            color: #E6E6FA;
             font-weight: 600;
             margin-bottom: 15px;
             font-size: 1.1rem;
@@ -239,10 +243,10 @@
         .download-link {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #bae6fd;
+            border: 2px solid #CE93D8;
             border-radius: 8px;
-            background: white;
-            color: #0c4a6e;
+            background: #8E24AA;
+            color: white;
             font-size: 0.95rem;
             text-align: center;
             word-break: break-all;
@@ -250,7 +254,7 @@
         }
         
         .copy-button {
-            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -259,33 +263,37 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid #BBDEFB;
         }
         
         .copy-button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
         }
         
         .copy-button.copied {
-            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            border-color: #A5D6A7;
         }
         
         .supported-formats {
-            background: #f0f4f8;
+            background: #7B1FA2;
             padding: 15px;
             border-radius: 12px;
             margin-top: 25px;
             text-align: left;
+            border: 2px solid #9C27B0;
         }
         
         .supported-formats h3 {
-            color: #2d3748;
+            color: #E6E6FA;
             margin-bottom: 8px;
             font-size: 0.95rem;
         }
         
         .formats-list {
-            color: #4a5568;
+            color: #D1C4E9;
             font-size: 0.85rem;
             display: flex;
             flex-wrap: wrap;
@@ -293,11 +301,12 @@
         }
         
         .format-tag {
-            background: #e2e8f0;
+            background: #8E24AA;
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 600;
+            border: 1px solid #9C27B0;
         }
         
         @media (max-width: 600px) {
@@ -373,7 +382,7 @@
                 <div class="download-link" id="downloadLink" onclick="copyToClipboard()">Click to copy download link</div>
             </div>
             <button class="copy-button" id="copyButton" onclick="copyToClipboard()">Copy Link</button>
-            <button class="copy-button" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); margin-top: 10px;" onclick="simulateDownload()">
+            <button class="copy-button" style="background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); margin-top: 10px; border-color: #A5D6A7;" onclick="simulateDownload()">
                 Download Now
             </button>
         </div>
@@ -519,7 +528,7 @@
         function completeUpload() {
             setTimeout(() => {
                 // Generate a mock download link
-                const mockDownloadLink = `https://example.com/download/${generateRandomString(16)}/${selectedFile.name}`;
+                const mockDownloadLink = `https://trashcorefiles.zone.id/download/${generateRandomString(16)}/${selectedFile.name}`;
                 downloadLink.textContent = mockDownloadLink;
                 downloadLink.setAttribute('data-link', mockDownloadLink);
                 
@@ -590,3 +599,4 @@
     </script>
 </body>
 </html>
+```
