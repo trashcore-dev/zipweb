@@ -528,7 +528,7 @@
         function completeUpload() {
             setTimeout(() => {
                 // Generate a mock download link
-                const mockDownloadLink = `https://trashcorefiles.zone.id/download/${generateRandomString(16)}/${selectedFile.name}`;
+                const mockDownloadLink = `http://www.trashcorefiles.zone.id/download/${generateRandomString(16)}/${selectedFile.name}`;
                 downloadLink.textContent = mockDownloadLink;
                 downloadLink.setAttribute('data-link', mockDownloadLink);
                 
