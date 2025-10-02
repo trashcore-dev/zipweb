@@ -3,848 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Clone</title>
+    <title>Issue Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background: #d9dbdc;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            overflow: hidden;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
         }
         
-        .whatsapp-container {
-            display: flex;
-            width: 100%;
-            max-width: 1200px;
-            height: 95vh;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
         }
         
-        /* Sidebar Styles */
-        .sidebar {
-            width: 30%;
-            min-width: 300px;
-            max-width: 400px;
-            background: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid #e6e6e6;
-            transition: transform 0.3s ease;
-        }
-        
-        .sidebar-header {
-            padding: 15px 16px;
-            background: #f0f2f5;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #e6e6e6;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4776E6, #8E54E9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        header {
+            text-align: center;
+            padding: 30px 0;
             color: white;
-            font-weight: bold;
-            font-size: 18px;
         }
         
-        .user-details h3 {
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e1e5f2;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 14px 28px;
             font-size: 16px;
             font-weight: 600;
-            color: #000;
-        }
-        
-        .user-details p {
-            font-size: 13px;
-            color: #667781;
-        }
-        
-        .sidebar-actions {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .sidebar-actions i {
-            font-size: 20px;
-            color: #54656f;
+            border-radius: 10px;
             cursor: pointer;
-        }
-        
-        .search-container {
-            padding: 8px 12px;
-            background: #f0f2f5;
-            border-bottom: 1px solid #e6e6e6;
-        }
-        
-        .search-box {
-            background: #f6f6f7;
-            border-radius: 8px;
-            padding: 8px 12px;
-            display: flex;
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
+            gap: 8px;
         }
         
-        .search-box input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 4px 8px;
-            font-size: 14px;
-            outline: none;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
         }
         
-        .contacts-list {
-            flex: 1;
-            overflow-y: auto;
+        .btn:active {
+            transform: translateY(0);
         }
         
-        .contact {
-            display: flex;
-            padding: 12px 16px;
-            border-bottom: 1px solid #e6e6e6;
-            cursor: pointer;
-            transition: background 0.2s;
+        .issues-container {
+            display: grid;
+            gap: 25px;
         }
         
-        .contact:hover {
-            background: #e9ebec;
+        .issue-card {
+            border-left: 4px solid #6a11cb;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
         }
         
-        .contact.active {
-            background: #e9ebec;
-        }
-        
-        .contact-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            background: linear-gradient(135deg, #4776E6, #8E54E9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .contact-info {
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        .contact-header {
+        .issue-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            align-items: flex-start;
+            margin-bottom: 15px;
         }
         
-        .contact-name {
-            font-weight: 500;
-            font-size: 15px;
-            color: #000;
+        .issue-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
         }
         
-        .contact-time {
-            font-size: 12px;
-            color: #667781;
+        .issue-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
         
-        .contact-message {
-            font-size: 14px;
-            color: #667781;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .unread-count {
-            background: #07bc0c;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 8px;
-        }
-        
-        /* Chat Area Styles */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png') repeat;
-        }
-        
-        .chat-header {
-            padding: 12px 16px;
-            background: #ededed;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #e6e6e6;
-        }
-        
-        .chat-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 15px;
-            background: linear-gradient(135deg, #4776E6, #8E54E9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .chat-user-info h3 {
-            font-size: 16px;
-            font-weight: 500;
-            color: #000;
-        }
-        
-        .chat-user-info p {
-            font-size: 13px;
-            color: #667781;
-        }
-        
-        .chat-actions {
-            margin-left: auto;
-            display: flex;
-            gap: 20px;
-        }
-        
-        .chat-actions i {
-            font-size: 20px;
-            color: #54656f;
-            cursor: pointer;
-        }
-        
-        .messages-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .message {
-            max-width: 65%;
-            padding: 8px 12px;
-            margin-bottom: 10px;
-            border-radius: 7.5px;
-            position: relative;
-            word-wrap: break-word;
-            animation: fadeIn 0.2s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .received {
-            align-self: flex-start;
-            background: #ffffff;
-            border-top-left-radius: 0;
-            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
-        }
-        
-        .sent {
-            align-self: flex-end;
-            background: #dcf8c6;
-            border-top-right-radius: 0;
-        }
-        
-        .message-time {
-            font-size: 11px;
-            color: #999;
-            text-align: right;
-            margin-top: 4px;
-        }
-        
-        .chat-footer {
-            padding: 10px 16px;
-            background: #f0f2f5;
-            display: flex;
-            align-items: center;
-            border-top: 1px solid #e6e6e6;
-        }
-        
-        .chat-actions-left {
-            display: flex;
-            gap: 15px;
-            margin-right: 10px;
-        }
-        
-        .chat-actions-left i {
-            font-size: 22px;
-            color: #54656f;
-            cursor: pointer;
-        }
-        
-        .message-input-container {
-            flex: 1;
-            background: #ffffff;
-            border-radius: 22px;
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .message-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 15px;
-            padding: 6px 0;
-            resize: none;
-            max-height: 100px;
-            height: 22px;
-        }
-        
-        .send-button {
-            background: transparent;
-            border: none;
-            color: #54656f;
-            cursor: pointer;
-            margin-left: 10px;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .send-button.active {
-            color: #07bc0c;
-        }
-        
-        /* Empty chat state */
-        .empty-chat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #667781;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .empty-chat i {
-            font-size: 80px;
+        .issue-description {
             margin-bottom: 20px;
-            opacity: 0.5;
-        }
-        
-        .empty-chat h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: #000;
-        }
-        
-        .empty-chat p {
-            max-width: 400px;
             line-height: 1.6;
+            color: #555;
         }
         
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .whatsapp-container {
-                height: 98vh;
-            }
-            
-            .sidebar {
-                position: absolute;
-                z-index: 10;
-                left: 0;
-                top: 0;
-                height: 100%;
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .menu-toggle {
-                display: block;
-                position: absolute;
-                top: 15px;
-                left: 15px;
-                z-index: 20;
-                font-size: 24px;
-                color: #54656f;
-                cursor: pointer;
-            }
-            
-            .chat-area {
-                width: 100%;
-            }
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #e1e5f2;
         }
         
-        .menu-toggle {
-            display: none;
+        .comment {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-        
-        /* Exit chat button */
-        .exit-chat {
-            background: #f0f2f5;
-            border: none;
-            color: #54656f;
-            padding: 5px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
+        .comment-header {
             display: flex;
-            align-items: center;
-            gap: 5px;
+            justify-content: space-between;
+            margin-bottom: 8px;
         }
         
-        .exit-chat:hover {
-            background: #e9ebec;
+        .comment-author {
+            font-weight: 600;
+            color: #2575fc;
+        }
+        
+        .comment-date {
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+        
+        .comment-content {
+            line-height: 1.5;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .issue-header {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="whatsapp-container">
-        <div class="menu-toggle" id="menuToggle">
-            <i class="fas fa-bars"></i>
-        </div>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bug"></i> Issue Tracker</h1>
+            <p>Suggest problems, request features, and discuss solutions with the community</p>
+        </header>
         
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="user-info">
-                    <div class="avatar">Y</div>
-                    <div class="user-details">
-                        <h3>You</h3>
-                        <p>Online</p>
+        <main>
+            <!-- Suggestion Form -->
+            <div class="card">
+                <h2>Suggest a New Issue</h2>
+                <form id="issueForm">
+                    <div class="form-group">
+                        <label for="issueTitle">Issue Title</label>
+                        <input type="text" id="issueTitle" placeholder="Briefly describe your issue" required>
                     </div>
-                </div>
-                <div class="sidebar-actions">
-                    <i class="fas fa-circle-notch"></i>
-                    <i class="fas fa-message"></i>
-                    <i class="fas fa-ellipsis-vertical"></i>
-                </div>
-            </div>
-            
-            <div class="search-container">
-                <div class="search-box">
-                    <i class="fas fa-search" style="color: #54656f;"></i>
-                    <input type="text" placeholder="Search or start new chat">
-                </div>
-            </div>
-            
-            <div class="contacts-list" id="contactsList">
-                <!-- Contacts will be populated by JavaScript -->
-            </div>
-        </div>
-        
-        <div class="chat-area" id="chatArea">
-            <div class="empty-chat" id="emptyChat">
-                <i class="fas fa-comments"></i>
-                <h3>Your messages</h3>
-                <p>Select a chat to start messaging or click on a contact to start a new conversation</p>
-            </div>
-            
-            <div class="chat-header" id="chatHeader" style="display: none;">
-                <div class="chat-avatar" id="headerAvatar">S</div>
-                <div class="chat-user-info">
-                    <h3 id="headerName">John Smith</h3>
-                    <p id="headerStatus">online</p>
-                </div>
-                <div class="chat-actions">
-                    <button class="exit-chat" id="exitChat">
-                        <i class="fas fa-arrow-left"></i> Back
+                    <div class="form-group">
+                        <label for="issueDescription">Description</label>
+                        <textarea id="issueDescription" placeholder="Provide details about the issue, steps to reproduce, or your feature request..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Submit Issue
                     </button>
-                </div>
+                </form>
             </div>
             
-            <div class="messages-container" id="messagesContainer" style="display: none;">
-                <!-- Messages will be populated by JavaScript -->
-            </div>
-            
-            <div class="chat-footer" id="chatFooter" style="display: none;">
-                <div class="chat-actions-left">
-                    <i class="fas fa-grin"></i>
-                    <i class="fas fa-paperclip"></i>
-                </div>
-                <div class="message-input-container">
-                    <textarea class="message-input" id="messageInput" placeholder="Type a message" rows="1"></textarea>
-                    <button class="send-button" id="sendButton">
-                        <i class="fas fa-microphone"></i>
-                    </button>
+            <!-- Issues List -->
+            <div class="card">
+                <h2>Existing Issues</h2>
+                <div id="issuesContainer" class="issues-container">
+                    <!-- Issues will be loaded here -->
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
-        // Sample data
-        const contacts = [
-            { id: 1, name: "John Smith", lastMessage: "Hey, how are you?", time: "10:30 AM", unread: 2, avatar: "J", status: "online" },
-            { id: 2, name: "Sarah Johnson", lastMessage: "Thanks for the help!", time: "Yesterday", unread: 0, avatar: "S", status: "typing..." },
-            { id: 3, name: "Michael Brown", lastMessage: "See you at the meeting", time: "Mon", unread: 0, avatar: "M", status: "online" },
-            { id: 4, name: "Emily Davis", lastMessage: "Can you send me the file?", time: "Mon", unread: 1, avatar: "E", status: "offline" },
-            { id: 5, name: "David Wilson", lastMessage: "Happy birthday!", time: "Sun", unread: 0, avatar: "D", status: "online" },
-            { id: 6, name: "Jessica Taylor", lastMessage: "Let's catch up soon", time: "Sat", unread: 0, avatar: "J", status: "offline" },
-            { id: 7, name: "Robert Miller", lastMessage: "Did you get my email?", time: "Fri", unread: 0, avatar: "R", status: "online" },
-            { id: 8, name: "Lisa Anderson", lastMessage: "Great job on the project!", time: "Thu", unread: 0, avatar: "L", status: "offline" }
-        ];
-        
-        // Initialize messages object
-        const messages = {};
-        contacts.forEach(contact => {
-            messages[contact.id] = [];
-        });
-        
-        // Add initial messages
-        messages[1] = [
-            { id: 1, text: "Hey there! How's it going?", sender: "other", time: "10:15 AM" },
-            { id: 2, text: "I'm doing great! Just finished the project.", sender: "me", time: "10:16 AM" },
-            { id: 3, text: "That's awesome! Can you send me the files?", sender: "other", time: "10:17 AM" },
-            { id: 4, text: "Sure, I'll email them to you right away.", sender: "me", time: "10:18 AM" },
-            { id: 5, text: "Thanks a lot!", sender: "other", time: "10:19 AM" },
-            { id: 6, text: "You're welcome! Let me know if you need anything else.", sender: "me", time: "10:20 AM" },
-            { id: 7, text: "Hey, how are you?", sender: "other", time: "10:30 AM" }
-        ];
-        
-        messages[2] = [
-            { id: 1, text: "Hi Sarah! How was your weekend?", sender: "me", time: "9:00 AM" },
-            { id: 2, text: "It was great! I went hiking with friends.", sender: "other", time: "9:05 AM" },
-            { id: 3, text: "That sounds fun! Where did you go?", sender: "me", time: "9:07 AM" },
-            { id: 4, text: "We went to Blue Mountain. The views were amazing!", sender: "other", time: "9:10 AM" },
-            { id: 5, text: "Thanks for the help!", sender: "other", time: "Yesterday" }
-        ];
-        
-        messages[3] = [
-            { id: 1, text: "Don't forget about the meeting tomorrow at 2 PM.", sender: "me", time: "3:00 PM" },
-            { id: 2, text: "I won't! I've already prepared my presentation.", sender: "other", time: "3:05 PM" },
-            { id: 3, text: "Great! See you then.", sender: "me", time: "3:06 PM" },
-            { id: 4, text: "See you at the meeting", sender: "other", time: "Mon" }
-        ];
+        // Initialize data from localStorage or create empty arrays
+        let issues = JSON.parse(localStorage.getItem('issues')) || [];
+        let nextIssueId = parseInt(localStorage.getItem('nextIssueId')) || 1;
+        let nextCommentId = parseInt(localStorage.getItem('nextCommentId')) || 1;
         
         // DOM Elements
-        const contactsList = document.getElementById('contactsList');
-        const messagesContainer = document.getElementById('messagesContainer');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const chatHeader = document.getElementById('chatHeader');
-        const chatFooter = document.getElementById('chatFooter');
-        const emptyChat = document.getElementById('emptyChat');
-        const headerAvatar = document.getElementById('headerAvatar');
-        const headerName = document.getElementById('headerName');
-        const headerStatus = document.getElementById('headerStatus');
-        const sidebar = document.getElementById('sidebar');
-        const menuToggle = document.getElementById('menuToggle');
-        const exitChat = document.getElementById('exitChat');
-        const chatArea = document.getElementById('chatArea');
+        const issueForm = document.getElementById('issueForm');
+        const issuesContainer = document.getElementById('issuesContainer');
         
-        // Current chat state
-        let currentChatId = null;
-        let messageCounter = 100; // To generate unique message IDs
-        
-        // Initialize the app
-        function initApp() {
-            renderContacts();
-            setupEventListeners();
-            
-            // Show empty chat state initially
-            showEmptyChat();
-        }
-        
-        // Render contacts list
-        function renderContacts() {
-            contactsList.innerHTML = '';
-            contacts.forEach(contact => {
-                const contactElement = document.createElement('div');
-                contactElement.className = `contact ${contact.id === currentChatId ? 'active' : ''}`;
-                contactElement.dataset.id = contact.id;
-                
-                contactElement.innerHTML = `
-                    <div class="contact-avatar">${contact.avatar}</div>
-                    <div class="contact-info">
-                        <div class="contact-header">
-                            <div class="contact-name">${contact.name}</div>
-                            <div class="contact-time">${contact.time}</div>
-                        </div>
-                        <div class="contact-message">${contact.lastMessage}</div>
-                    </div>
-                    ${contact.unread > 0 ? `<div class="unread-count">${contact.unread}</div>` : ''}
-                `;
-                
-                contactElement.addEventListener('click', () => {
-                    openChat(contact.id);
-                });
-                
-                contactsList.appendChild(contactElement);
+        // Format date for display
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
         }
         
-        // Open a chat with a contact
-        function openChat(chatId) {
-            currentChatId = chatId;
-            renderContacts();
-            renderMessages(chatId);
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('issues', JSON.stringify(issues));
+            localStorage.setItem('nextIssueId', nextIssueId.toString());
+            localStorage.setItem('nextCommentId', nextCommentId.toString());
+        }
+        
+        // Create a new issue
+        function createIssue(title, description) {
+            const newIssue = {
+                id: nextIssueId++,
+                title: title,
+                description: description,
+                date: new Date().toISOString(),
+                comments: []
+            };
             
-            // Show chat interface
-            emptyChat.style.display = 'none';
-            chatHeader.style.display = 'flex';
-            messagesContainer.style.display = 'flex';
-            chatFooter.style.display = 'flex';
-            
-            // Update header info
-            const contact = contacts.find(c => c.id === chatId);
-            if (contact) {
-                headerAvatar.textContent = contact.avatar;
-                headerName.textContent = contact.name;
-                headerStatus.textContent = contact.status;
+            issues.unshift(newIssue);
+            saveData();
+            renderIssues();
+        }
+        
+        // Add a comment to an issue
+        function addComment(issueId, author, content) {
+            const issue = issues.find(issue => issue.id === issueId);
+            if (issue) {
+                issue.comments.push({
+                    id: nextCommentId++,
+                    author: author || 'Anonymous',
+                    content: content,
+                    date: new Date().toISOString()
+                });
+                saveData();
+                renderIssues();
             }
-            
-            // Clear input and focus
-            messageInput.value = '';
-            messageInput.style.height = '22px';
-            messageInput.focus();
-            
-            // Close sidebar on mobile
-            if (window.innerWidth <= 900) {
-                sidebar.classList.remove('active');
-            }
         }
         
-        // Exit current chat
-        function exitChatHandler() {
-            currentChatId = null;
-            showEmptyChat();
-            renderContacts();
-        }
-        
-        // Show empty chat state
-        function showEmptyChat() {
-            emptyChat.style.display = 'flex';
-            chatHeader.style.display = 'none';
-            messagesContainer.style.display = 'none';
-            chatFooter.style.display = 'none';
-        }
-        
-        // Render messages for a chat
-        function renderMessages(chatId) {
-            messagesContainer.innerHTML = '';
-            const chatMessages = messages[chatId] || [];
-            
-            if (chatMessages.length === 0) {
-                messagesContainer.innerHTML = '<div class="empty-chat" style="height: auto; padding: 20px;"><p>No messages yet. Send a message to start the conversation!</p></div>';
+        // Render all issues
+        function renderIssues() {
+            if (issues.length === 0) {
+                issuesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No issues yet</h3>
+                        <p>Be the first to suggest an issue or request a feature!</p>
+                    </div>
+                `;
                 return;
             }
             
-            chatMessages.forEach(msg => {
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${msg.sender === 'me' ? 'sent' : 'received'}`;
-                
-                messageElement.innerHTML = `
-                    ${msg.text}
-                    <div class="message-time">${msg.time}</div>
-                `;
-                
-                messagesContainer.appendChild(messageElement);
-            });
+            issuesContainer.innerHTML = issues.map(issue => `
+                <div class="issue-card">
+                    <div class="issue-header">
+                        <h3 class="issue-title">${issue.title}</h3>
+                        <div class="issue-date">${formatDate(issue.date)}</div>
+                    </div>
+                    <p class="issue-description">${issue.description}</p>
+                    
+                    <div class="comments-section">
+                        <h4>Comments (${issue.comments.length})</h4>
+                        
+                        ${issue.comments.length > 0 ? 
+                            issue.comments.map(comment => `
+                                <div class="comment">
+                                    <div class="comment-header">
+                                        <span class="comment-author">${comment.author}</span>
+                                        <span class="comment-date">${formatDate(comment.date)}</span>
+                                    </div>
+                                    <div class="comment-content">${comment.content}</div>
+                                </div>
+                            `).join('') : 
+                            '<p class="empty-state" style="padding: 10px 0; margin: 0;">No comments yet. Be the first to comment!</p>'
+                        }
+                        
+                        <form class="comment-form" data-issue-id="${issue.id}" style="margin-top: 15px;">
+                            <div class="form-group">
+                                <input type="text" placeholder="Your name (optional)" class="comment-author-input">
+                                <textarea placeholder="Add your comment..." class="comment-content-input" required></textarea>
+                            </div>
+                            <button type="submit" class="btn" style="padding: 10px 20px; font-size: 14px;">
+                                <i class="fas fa-comment"></i> Post Comment
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `).join('');
             
-            // Scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        
-        // Send a new message
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text || !currentChatId) return;
-            
-            // Get current time
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const timeString = hours + ':' + (minutes < 10 ? '0' : '') + minutes;
-            
-            // Create new message
-            const newMessage = {
-                id: messageCounter++,
-                text: text,
-                sender: 'me',
-                time: timeString
-            };
-            
-            // Add to messages array
-            messages[currentChatId].push(newMessage);
-            
-            // Update contact last message
-            const contact = contacts.find(c => c.id === currentChatId);
-            if (contact) {
-                contact.lastMessage = text;
-                contact.time = 'now';
-                contact.unread = 0;
-            }
-            
-            // Re-render
-            renderMessages(currentChatId);
-            renderContacts();
-            
-            // Clear input
-            messageInput.value = '';
-            messageInput.style.height = '22px';
-            messageInput.focus();
-            
-            // Simulate reply after a delay
-            setTimeout(simulateReply, 2000 + Math.random() * 3000);
-        }
-        
-        // Simulate a reply from the contact
-        function simulateReply() {
-            if (!currentChatId) return;
-            
-            const replies = [
-                "That's interesting!",
-                "Thanks for the message!",
-                "I agree with you.",
-                "How are you doing?",
-                "Great point!",
-                "I'll get back to you soon.",
-                "Sounds good!",
-                "Let me check on that.",
-                "I appreciate your help!",
-                "Looking forward to your next message!"
-            ];
-            
-            const randomReply = replies[Math.floor(Math.random() * replies.length)];
-            
-            // Get current time
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const timeString = hours + ':' + (minutes < 10 ? '0' : '') + minutes;
-            
-            // Create reply message
-            const replyMessage = {
-                id: messageCounter++,
-                text: randomReply,
-                sender: 'other',
-                time: timeString
-            };
-            
-            // Add to messages
-            messages[currentChatId].push(replyMessage);
-            
-            // Update contact last message
-            const contact = contacts.find(c => c.id === currentChatId);
-            if (contact) {
-                contact.lastMessage = randomReply;
-                contact.time = 'now';
-            }
-            
-            // Re-render
-            renderMessages(currentChatId);
-            renderContacts();
-        }
-        
-        // Setup event listeners
-        function setupEventListeners() {
-            // Send message on button click
-            sendButton.addEventListener('click', () => {
-                if (sendButton.innerHTML.includes('paper-plane')) {
-                    sendMessage();
-                }
-            });
-            
-            // Send message on Enter (but allow Shift+Enter for new line)
-            messageInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+            // Add event listeners to comment forms
+            document.querySelectorAll('.comment-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // Auto-resize textarea and toggle send button
-            messageInput.addEventListener('input', () => {
-                // Auto-resize
-                messageInput.style.height = 'auto';
-                messageInput.style.height = Math.min(messageInput.scrollHeight, 100) + 'px';
-                
-                // Toggle send button icon based on input
-                if (messageInput.value.trim() !== '') {
-                    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-                    sendButton.classList.add('active');
-                } else {
-                    sendButton.innerHTML = '<i class="fas fa-microphone"></i>';
-                    sendButton.classList.remove('active');
-                }
-            });
-            
-            // Mobile menu toggle
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.add('active');
-            });
-            
-            // Exit chat button
-            exitChat.addEventListener('click', exitChatHandler);
-            
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth <= 900 && 
-                    !sidebar.contains(e.target) && 
-                    e.target !== menuToggle && 
-                    !chatArea.contains(e.target)) {
-                    sidebar.classList.remove('active');
-                }
+                    const issueId = parseInt(this.dataset.issueId);
+                    const authorInput = this.querySelector('.comment-author-input');
+                    const contentInput = this.querySelector('.comment-content-input');
+                    
+                    addComment(issueId, authorInput.value.trim(), contentInput.value.trim());
+                    
+                    // Reset form
+                    authorInput.value = '';
+                    contentInput.value = '';
+                });
             });
         }
         
-        // Initialize the app when the page loads
-        window.addEventListener('DOMContentLoaded', initApp);
+        // Handle new issue submission
+        issueForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('issueTitle').value.trim();
+            const description = document.getElementById('issueDescription').value.trim();
+            
+            if (title && description) {
+                createIssue(title, description);
+                
+                // Reset form
+                issueForm.reset();
+            }
+        });
+        
+        // Initial render
+        renderIssues();
     </script>
 </body>
 </html>
